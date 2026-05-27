@@ -34,6 +34,22 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: supersecret
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -48,6 +64,31 @@ jobs:
       - name: Run tests
         working-directory: ./esgi-2603-my-favorite-places/server
         run: yarn test
+
+      - name: Build server
+        working-directory: ./esgi-2603-my-favorite-places/server
+        run: yarn build
+
+      - name: Start server
+        working-directory: ./esgi-2603-my-favorite-places/server
+        run: node dist/index.js &
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: supersecret
+          DB_NAME: postgres
+          PORT: 3000
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000/api/users/me --timeout 15000 --httpTimeout 15000 || true
+
+      - name: Install Bruno CLI
+        run: npm install -g @usebruno/cli
+
+      - name: Run Bruno tests
+        working-directory: ./esgi-2603-my-favorite-places/bruno
+        run: bru run create-user.yml connection.yml
 
       - uses: docker/login-action@v3
         with:
