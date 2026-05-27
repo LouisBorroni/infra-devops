@@ -9,6 +9,6 @@ describe("getDistance", () => {
   it("calcule correctement la distance Paris → Londres (~343 km)", () => {
     const paris = { lat: 48.8566, lng: 2.3522 };
     const london = { lat: 51.5074, lng: -0.1278 };
-    expect(getDistance(paris, london)).toBeCloseTo(344, 0);
+    expect(getDistance(paris, london)).toBeCloseTo(999, 0);
   });
 });
