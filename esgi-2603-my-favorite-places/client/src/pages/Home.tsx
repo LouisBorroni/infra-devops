@@ -2,6 +2,7 @@ import { ButtonLink } from "../components/ButtonLink";
 import { Layout } from "../components/Layout";
 import { Row } from "../components/Row";
 
+//salut
 export function HomePage() {
   return (
     <Layout title="Home page">
