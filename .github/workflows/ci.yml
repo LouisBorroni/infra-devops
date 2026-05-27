@@ -123,3 +123,70 @@ jobs:
           context: ./esgi-2603-my-favorite-places/client
           push: true
           tags: ghcr.io/louisborroni/infra-devops/client:latest
+
+  e2e:
+    needs: changes
+    if: ${{ needs.changes.outputs.client == 'true' || needs.changes.outputs.server == 'true' }}
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: supersecret
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install server dependencies
+        working-directory: ./esgi-2603-my-favorite-places/server
+        run: yarn install --frozen-lockfile
+
+      - name: Build server
+        working-directory: ./esgi-2603-my-favorite-places/server
+        run: yarn build
+
+      - name: Start server
+        working-directory: ./esgi-2603-my-favorite-places/server
+        run: node dist/index.js &
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: supersecret
+          DB_NAME: postgres
+          PORT: 3000
+
+      - name: Install client dependencies
+        working-directory: ./esgi-2603-my-favorite-places/client
+        run: yarn install --frozen-lockfile
+
+      - name: Build client
+        working-directory: ./esgi-2603-my-favorite-places/client
+        run: yarn build
+        env:
+          API_URL: http://localhost:3000
+
+      - name: Start client
+        working-directory: ./esgi-2603-my-favorite-places/client
+        run: yarn preview --host --port 80 &
+
+      - name: Wait for services
+        run: npx wait-on http://localhost:80 http://localhost:3000/api/users/me --timeout 30000 --httpTimeout 30000 || true
+
+      - name: Run Cypress tests
+        working-directory: ./esgi-2603-my-favorite-places/client
+        run: yarn test:e2e
