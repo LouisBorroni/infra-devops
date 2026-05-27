@@ -35,7 +35,5 @@ services:
     image: ghcr.io/louisborroni/infra-devops/client:latest
     ports:
       - "${CLIENT_PORT}:80"
-    environment:
-      API_URL: ${INTERNAL_API_URL}
     depends_on:
       - server
