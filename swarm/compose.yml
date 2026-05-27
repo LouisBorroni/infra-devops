@@ -1,23 +1,25 @@
 services:
   manager:
-    image: docker:dind
+    build: .
     privileged: true
     container_name: manager
+    ports:
+      - "80:80"
     volumes:
       - manager-home:/home/manager
 
   node1:
-    image: docker:dind
+    build: .
     privileged: true
     container_name: node1
 
   node2:
-    image: docker:dind
+    build: .
     privileged: true
     container_name: node2
 
   node3:
-    image: docker:dind
+    build: .
     privileged: true
     container_name: node3
 
