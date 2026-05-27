@@ -16,7 +16,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production
 
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist ./dist    
 
 EXPOSE 3000
 
