@@ -5,6 +5,9 @@ services:
     container_name: manager
     ports:
       - "80:80"
+      - "8080:8080"
+      - "8081:8081"
+      - "9443:9443"
     volumes:
       - manager-home:/home/manager
 
