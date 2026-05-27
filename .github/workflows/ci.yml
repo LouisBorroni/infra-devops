@@ -24,13 +24,13 @@ jobs:
       - name: Build and push server
         uses: docker/build-push-action@v5
         with:
-          context: ./server
+          context: ./esgi-2603-my-favorite-places/server
           push: true
           tags: ghcr.io/louisborroni/infra-devops/server:latest
 
       - name: Build and push client
         uses: docker/build-push-action@v5
         with:
-          context: ./client
+          context: ./esgi-2603-my-favorite-places/client
           push: true
           tags: ghcr.io/louisborroni/infra-devops/client:latest
