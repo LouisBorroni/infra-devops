@@ -4,7 +4,8 @@ Ce repo regroupe l'ensemble de l'infrastructure et du code applicatif du projet 
 
 esgi-2603-my-favorite-places/ — Application MFP (client React + API Node.js + PostgreSQL)
 swarm/— Infrastructure Docker Swarm (Traefik, Portainer, Shepherd, stacks)
-esgi-2604-ansible/ — Exercices Ansible (initialisation du cluster Swarm)
+esgi-2604-ansible/ — App de test
+esgi-2604-ansible/ — Exercices Ansible
 
 
 ## Environnements
@@ -12,7 +13,6 @@ esgi-2604-ansible/ — Exercices Ansible (initialisation du cluster Swarm)
 Local dev : esgi-2603-my-favorite-places/  `docker compose up`
 Prod locale  : esgi-2603-my-favorite-places/ `docker compose -f compose.prod.yml up -d`
 Swarm: swarm/ 
-Ansible exemple : esgi-2604-ansible/
 
 
 ## Démarrer l'infrastructure Swarm
